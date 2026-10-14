@@ -15,10 +15,10 @@ struct resource_t {
 	uint8_t *vga;
 };
 
-extern struct resource_t g_res;
+extern struct resource_t ja_g_res;
 
-extern void	res_init(const char *datapath, int vga_size);
-extern void	res_fini();
-extern int	load_file(const char *filename);
+extern void	ja_res_init(const char *datapath, int vga_size);
+extern void	ja_res_fini();
+extern int	ja_load_file(const char *filename);
 
 #endif

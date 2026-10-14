@@ -12,7 +12,7 @@
 
 void video_draw_dot_pattern(int offset) {
 	static const int W = 144;
-	uint8_t *dst = g_res.vga + (GAME_SCREEN_H - PANEL_H) * GAME_SCREEN_W + offset;
+	uint8_t *dst = ja_g_res.vga + (GAME_SCREEN_H - PANEL_H) * GAME_SCREEN_W + offset;
 	for (int y = 0; y < PANEL_H; ++y) {
 		for (int x = 0; x < W; x += 2) {
 			dst[x + (y & 1)] = 0;
@@ -21,11 +21,11 @@ void video_draw_dot_pattern(int offset) {
 	}
 }
 
-void video_draw_sprite(int num, int x, int y, int flag) {
+void ja_video_draw_sprite(int num, int x, int y, int flag) {
 	g_sys.render_add_sprite(RENDER_SPR_GAME, num, x, y, flag != 0);
 }
 
-void video_draw_string(const char *s, int offset, int hspace) {
+void ja_video_draw_string(const char *s, int offset, int hspace) {
 	while (*s) {
 		uint8_t code = *s++;
 		if (code != 0x20) {
@@ -34,7 +34,7 @@ void video_draw_string(const char *s, int offset, int hspace) {
 			} else {
 				code -= 0x16;
 			}
-			ja_decode_chr(g_res.font + code * 200, 200, g_res.tmp + 768 + offset, 320);
+			ja_decode_chr(ja_g_res.font + code * 200, 200, ja_g_res.tmp + 768 + offset, 320);
 		}
 		offset += hspace;
 	}
@@ -42,12 +42,12 @@ void video_draw_string(const char *s, int offset, int hspace) {
 
 void video_copy_vga(int size) {
 	if (size == 0xB500) {
-		memcpy(g_res.background, g_res.tmp + 768, 64000);
+		memcpy(ja_g_res.background, ja_g_res.tmp + 768, 64000);
 	} else {
 		assert(size == 0x7D00);
-		g_sys.set_screen_palette(g_res.tmp, 0, 256, 6);
-		memcpy(g_res.vga, g_res.tmp + 768, 64000);
-		g_sys.copy_bitmap(g_res.vga, 320, 200);
+		g_sys.set_screen_palette(ja_g_res.tmp, 0, 256, 6);
+		memcpy(ja_g_res.vga, ja_g_res.tmp + 768, 64000);
+		g_sys.copy_bitmap(ja_g_res.vga, 320, 200);
 	}
 }
 
@@ -55,12 +55,12 @@ void video_copy_backbuffer(int h) {
 	int y = 0;
 	for (; y < MIN(200, GAME_SCREEN_H) - h; ++y) {
 		for (int x = 0; x < GAME_SCREEN_W; x += 320) {
-			memcpy(g_res.vga + y * GAME_SCREEN_W + x, g_res.background + y * 320, MIN(320, GAME_SCREEN_W - x));
+			memcpy(ja_g_res.vga + y * GAME_SCREEN_W + x, ja_g_res.background + y * 320, MIN(320, GAME_SCREEN_W - x));
 		}
 	}
 	h = GAME_SCREEN_H - y;
 	if (h > 0) {
-		memset(g_res.vga + y * GAME_SCREEN_W, 0, GAME_SCREEN_W * h);
+		memset(ja_g_res.vga + y * GAME_SCREEN_W, 0, GAME_SCREEN_W * h);
 	}
 }
 
@@ -168,17 +168,17 @@ static void decode_motif_scanline(const uint8_t *src, uint8_t *dst, uint8_t colo
 }
 
 void ja_decode_motif(int num, uint8_t color) {
-	const uint8_t *src = g_res.motif + 25 * 320 * num;
+	const uint8_t *src = ja_g_res.motif + 25 * 320 * num;
 	int y = 0;
 	for (int j = 0; j < 25; ++j) {
 		for (int i = 0; i < 8; ++i) {
-			decode_motif_scanline(src + i * 40 + j * 320, g_res.vga + y * GAME_SCREEN_W, color);
+			decode_motif_scanline(src + i * 40 + j * 320, ja_g_res.vga + y * GAME_SCREEN_W, color);
 			++y;
 		}
 	}
 }
 
-void video_load_sprites() {
+void ja_video_load_sprites() {
 	struct sys_rect_t r[MAX_SPRITES];
 	uint8_t *data = (uint8_t *)calloc(MAX_SPRITESHEET_W * MAX_SPRITESHEET_H, 1);
 	if (data) {
@@ -214,7 +214,7 @@ void video_load_sprites() {
 					max_h = h;
 				}
 			}
-			ja_decode_spr(g_res.sprites + total_size, w / 8, h, data + current_y * MAX_SPRITESHEET_W + current_x, MAX_SPRITESHEET_W, sprite_palettes[i] * 0x10);
+			ja_decode_spr(ja_g_res.sprites + total_size, w / 8, h, data + current_y * MAX_SPRITESHEET_W + current_x, MAX_SPRITESHEET_W, sprite_palettes[i] * 0x10);
 			total_size += size;
 
 			r[i].x = current_x;

@@ -4,6 +4,6 @@
 
 #include "intern.h"
 
-extern int	unpack(FILE *fp, uint8_t *dst);
+extern int	bb_unpack(FILE *fp, uint8_t *dst);
 
 #endif /* UNPACK_H__ */

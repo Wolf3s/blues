@@ -121,7 +121,11 @@ static void sdl2_set_screen_size(int w, int h, const char *caption, int scale, c
 	const int window_h = h * scale;
 	const int flags = fullscreen ? SDL_WINDOW_FULLSCREEN_DESKTOP : SDL_WINDOW_RESIZABLE;
 	_window = SDL_CreateWindow(caption, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, window_w, window_h, flags);
+#ifdef PS2
+	_renderer = SDL_CreateRenderer(_window, -1, SDL_RENDERER_ACCELERATED);
+#else
 	_renderer = SDL_CreateRenderer(_window, -1, 0);
+#endif
 	SDL_RenderSetLogicalSize(_renderer, w, h);
 	print_debug(DBG_SYSTEM, "set_screen_size %d,%d", _screen_w, _screen_h);
 	_screen_buffer = (uint32_t *)calloc(_screen_w * _screen_h, sizeof(uint32_t));

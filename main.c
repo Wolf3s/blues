@@ -4,6 +4,9 @@
 #include "sys.h"
 #include "mixer.h"
 #include "util.h"
+#ifdef PS2
+#include <SDL2/SDL_main.h>
+#endif
 
 struct options_t g_options;
 
@@ -66,6 +69,9 @@ int main(int argc, char *argv[]) {
 	g_options.screen_w = 480;
 	g_options.screen_h = 272;
 	g_options.jump_button = true;
+#elif defined(PS2)
+	g_options.screen_w = 640;
+	g_options.screen_h = 448;
 #else
 	g_options.screen_w = 320;
 	g_options.screen_h = 200;

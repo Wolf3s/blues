@@ -39,7 +39,7 @@ static const char *_modules[] = {
 };
 
 static uint8_t *load_file(const char *filename, int *size, uint8_t *buffer) {
-	FILE *fp = fopen_nocase(g_res.datapath, filename);
+	FILE *fp = fopen_nocase(bb_g_res.datapath, filename);
 	if (!fp) {
 		return 0;
 	}
@@ -63,19 +63,19 @@ static uint8_t *load_file(const char *filename, int *size, uint8_t *buffer) {
 	return buffer;
 }
 
-void sound_init() {
+void bb_sound_init() {
 }
 
-void sound_fini() {
+void bb_sound_fini() {
 }
 
-void play_sound(int num) {
-	if (g_res.snd) {
-		g_mix.play_sound(g_res.snd + _sounds_amiga[num].offset * 2, _sounds_amiga[num].size, PAULA_FREQ / 0x358, 0);
+void bb_play_sound(int num) {
+	if (bb_g_res.snd) {
+		g_mix.play_sound(bb_g_res.snd + _sounds_amiga[num].offset * 2, _sounds_amiga[num].size, PAULA_FREQ / 0x358, 0);
 	}
 }
 
-void play_music(int num) {
+void bb_play_music(int num) {
 	const char *filename = _modules[num * 2]; // Amiga
 	int size = 0;
 	uint8_t *buf = load_file(filename, &size, 0);

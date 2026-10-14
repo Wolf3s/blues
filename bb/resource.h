@@ -50,10 +50,10 @@ struct resource_data_t {
 	uint8_t cga_lut_sqv[16 * 2];
 };
 
-extern struct resource_data_t g_res;
+extern struct resource_data_t bb_g_res;
 
-extern void	res_init(const char *datapath, int vga_size);
-extern void	res_fini();
+extern void	bb_res_init(const char *datapath, int vga_size);
+extern void	bb_res_fini();
 extern int	read_file(const char *filename, uint8_t *dst, int size);
 extern int	read_compressed_file(const char *filename, uint8_t *dst);
 extern void	load_avt(const char *filename, uint8_t *dst, int offset, int dither_pattern);

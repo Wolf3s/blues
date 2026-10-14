@@ -19,30 +19,30 @@ static const uint8_t _colors_cga[] = {
 	0x00, 0x00, 0x00, 0x55, 0xFF, 0xFF, 0xFF, 0x55, 0xFF, 0xFF, 0xFF, 0xFF
 };
 
-struct vars_t g_vars;
+struct vars_t bb_g_vars;
 
-void update_input() {
+void bb_update_input() {
 	g_sys.process_events();
-	g_vars.inp_key_left  = ((g_sys.input.direction & INPUT_DIRECTION_LEFT) != 0);
-	g_vars.inp_key_right = ((g_sys.input.direction & INPUT_DIRECTION_RIGHT) != 0);
-	g_vars.inp_key_up    = ((g_sys.input.direction & INPUT_DIRECTION_UP) != 0);
-	g_vars.inp_key_down  = ((g_sys.input.direction & INPUT_DIRECTION_DOWN) != 0);
-	g_vars.inp_key_space = g_sys.input.space;
-	g_vars.inp_key_jump  = g_sys.input.jump;
+	bb_g_vars.inp_key_left  = ((g_sys.input.direction & INPUT_DIRECTION_LEFT) != 0);
+	bb_g_vars.inp_key_right = ((g_sys.input.direction & INPUT_DIRECTION_RIGHT) != 0);
+	bb_g_vars.inp_key_up    = ((g_sys.input.direction & INPUT_DIRECTION_UP) != 0);
+	bb_g_vars.inp_key_down  = ((g_sys.input.direction & INPUT_DIRECTION_DOWN) != 0);
+	bb_g_vars.inp_key_space = g_sys.input.space;
+	bb_g_vars.inp_key_jump  = g_sys.input.jump;
 }
 
 static void do_title_screen() {
 	const uint32_t timestamp = g_sys.get_timestamp() + 20 * 1000;
-	load_img(g_res.amiga_data ? "blues.lbm" : "pres.sqz", GAME_SCREEN_W, g_options.cga_colors ? 0 : -1);
+	load_img(bb_g_res.amiga_data ? "blues.lbm" : "pres.sqz", GAME_SCREEN_W, g_options.cga_colors ? 0 : -1);
 	g_sys.fade_in_palette();
 	do {
-		update_input();
+		bb_update_input();
 		if (g_sys.input.space || g_sys.input.quit) {
 			break;
 		}
 		g_sys.sleep(10);
 	} while (g_sys.get_timestamp() < timestamp);
-	play_sound(SOUND_0);
+	bb_play_sound(SOUND_0);
 	fade_out_palette();
 	g_sys.input.space = 0;
 }
@@ -53,7 +53,7 @@ static void do_demo_screens() {
 		load_img(filenames[i], GAME_SCREEN_W, -1);
 		g_sys.fade_in_palette();
 		while (1) {
-			update_input();
+			bb_update_input();
 			if (g_sys.input.space) {
 				break;
 			}
@@ -74,13 +74,13 @@ static void do_select_player() {
 	int frame2 = 1;
 	const int color_rgb = 2;
 	const int colors_count = 25;
-	load_img(g_res.amiga_data ? "choix.lbm" : "choix.sqz", GAME_SCREEN_W, g_options.cga_colors ? 1 : -1);
-	if (g_res.spr_count <= SPRITES_COUNT) {
-		screen_load_graphics(g_options.cga_colors ? g_res.cga_lut_sqv : 0, 0);
+	load_img(bb_g_res.amiga_data ? "choix.lbm" : "choix.sqz", GAME_SCREEN_W, g_options.cga_colors ? 1 : -1);
+	if (bb_g_res.spr_count <= SPRITES_COUNT) {
+		screen_load_graphics(g_options.cga_colors ? bb_g_res.cga_lut_sqv : 0, 0);
 	}
 	do {
 		screen_clear_sprites(1);
-		update_input();
+		bb_update_input();
 		const uint32_t timestamp = g_sys.get_timestamp();
 		switch (state) {
 		case 0:
@@ -96,10 +96,10 @@ static void do_select_player() {
 			} else {
 				frame2 = 1;
 			}
-			g_vars.two_players_flag = 0;
-			level_data[g_vars.level * MAX_OBJECTS + OBJECT_NUM_PLAYER1] = PLAYER_JAKE;
-			level_data[g_vars.level * MAX_OBJECTS + OBJECT_NUM_PLAYER2] = 100;
-			g_vars.player = PLAYER_JAKE;
+			bb_g_vars.two_players_flag = 0;
+			level_data[bb_g_vars.level * MAX_OBJECTS + OBJECT_NUM_PLAYER1] = PLAYER_JAKE;
+			level_data[bb_g_vars.level * MAX_OBJECTS + OBJECT_NUM_PLAYER2] = 100;
+			bb_g_vars.player = PLAYER_JAKE;
 			if (g_sys.input.direction & INPUT_DIRECTION_RIGHT) {
 				g_sys.input.direction &= ~INPUT_DIRECTION_RIGHT;
 				for (int i = 0; i < colors_count; ++i) {
@@ -135,10 +135,10 @@ static void do_select_player() {
 			} else {
 				frame2 = 1;
 			}
-			g_vars.two_players_flag = 0;
-			level_data[g_vars.level * MAX_OBJECTS + OBJECT_NUM_PLAYER1] = PLAYER_ELWOOD;
-			level_data[g_vars.level * MAX_OBJECTS + OBJECT_NUM_PLAYER2] = 100;
-			g_vars.player = PLAYER_ELWOOD;
+			bb_g_vars.two_players_flag = 0;
+			level_data[bb_g_vars.level * MAX_OBJECTS + OBJECT_NUM_PLAYER1] = PLAYER_ELWOOD;
+			level_data[bb_g_vars.level * MAX_OBJECTS + OBJECT_NUM_PLAYER2] = 100;
+			bb_g_vars.player = PLAYER_ELWOOD;
 			if (g_sys.input.direction & INPUT_DIRECTION_RIGHT) {
 				g_sys.input.direction &= ~INPUT_DIRECTION_RIGHT;
 				for (int i = 0; i < colors_count; ++i) {
@@ -174,7 +174,7 @@ static void do_select_player() {
 			} else {
 				frame2 = 1;
 			}
-			g_vars.two_players_flag = 1;
+			bb_g_vars.two_players_flag = 1;
 			if (g_sys.input.direction & INPUT_DIRECTION_RIGHT) {
 				g_sys.input.direction &= ~INPUT_DIRECTION_RIGHT;
 				for (int i = 0; i < colors_count; ++i) {
@@ -209,7 +209,7 @@ static void do_select_player() {
 		screen_vsync();
 		const int diff = (timestamp + (1000 / 30)) - g_sys.get_timestamp();
 		g_sys.sleep(diff < 10 ? 10 : diff);
-		if (g_sys.input.space || g_vars.play_demo_flag) {
+		if (g_sys.input.space || bb_g_vars.play_demo_flag) {
 			quit = 1;
 		}
 	} while (!quit && !g_sys.input.quit);
@@ -235,30 +235,30 @@ static void do_inter_screen_helper(int xpos, int ypos, int c) {
 static void do_inter_screen() {
 	static const uint8_t xpos[] = { 0xFA, 0x50, 0xF0, 0xC8, 0x50, 0x50 };
 	static const uint8_t ypos[] = { 0xAA, 0x37, 0x28, 0x5F, 0xA5, 0xAA };
-	load_img(g_res.amiga_data ? "inter.lbm" : "inter.sqz", GAME_SCREEN_W, g_options.cga_colors ? 9 : -1);
+	load_img(bb_g_res.amiga_data ? "inter.lbm" : "inter.sqz", GAME_SCREEN_W, g_options.cga_colors ? 9 : -1);
 	screen_clear_sprites(1);
-	if (g_vars.level > 1) {
-		for (int i = 0; i < g_vars.level - 1; ++i) {
+	if (bb_g_vars.level > 1) {
+		for (int i = 0; i < bb_g_vars.level - 1; ++i) {
 			do_inter_screen_helper(xpos[i], ypos[i], 0);
 		}
 	}
-	if (g_vars.level == MAX_LEVELS - 1) {
-		do_inter_screen_helper(xpos[g_vars.level], ypos[g_vars.level], 0);
+	if (bb_g_vars.level == MAX_LEVELS - 1) {
+		do_inter_screen_helper(xpos[bb_g_vars.level], ypos[bb_g_vars.level], 0);
 	}
 	g_sys.fade_in_palette();
-	if (g_vars.level > 0 && g_vars.level < MAX_LEVELS - 1) {
-		do_inter_screen_helper(xpos[g_vars.level - 1], ypos[g_vars.level - 1], 1);
+	if (bb_g_vars.level > 0 && bb_g_vars.level < MAX_LEVELS - 1) {
+		do_inter_screen_helper(xpos[bb_g_vars.level - 1], ypos[bb_g_vars.level - 1], 1);
 	}
 	// screen_do_transition2();
 	g_sys.update_screen();
-	if (g_vars.level < MAX_LEVELS - 1) {
-		play_sound(SOUND_2);
-		screen_add_sprite(xpos[g_vars.level], ypos[g_vars.level], 126);
+	if (bb_g_vars.level < MAX_LEVELS - 1) {
+		bb_play_sound(SOUND_2);
+		screen_add_sprite(xpos[bb_g_vars.level], ypos[bb_g_vars.level], 126);
 	}
 	g_sys.update_screen();
 	const uint32_t timestamp = g_sys.get_timestamp() + 4 * 1000;
 	do {
-		update_input();
+		bb_update_input();
 		if (g_sys.input.space || g_sys.input.quit) {
 			break;
 		}
@@ -267,52 +267,52 @@ static void do_inter_screen() {
 }
 
 static void game_run() {
-	play_music(0);
+	bb_play_music(0);
 	screen_init();
-	g_vars.start_level = 0;
-	if (g_res.amiga_data) {
-		load_spr("sprite", g_res.spr_sqv, 0);
-		load_spr("objet", g_res.spr_sqv + SPRITE_SIZE, 101);
+	bb_g_vars.start_level = 0;
+	if (bb_g_res.amiga_data) {
+		load_spr("sprite", bb_g_res.spr_sqv, 0);
+		load_spr("objet", bb_g_res.spr_sqv + SPRITE_SIZE, 101);
 	} else {
-		load_sqv("sprite.sqv", g_res.spr_sqv, 0, g_options.cga_colors ? 2 : -1);
+		load_sqv("sprite.sqv", bb_g_res.spr_sqv, 0, g_options.cga_colors ? 2 : -1);
 	}
-	if (g_options.amiga_status_bar || g_res.amiga_data) {
+	if (g_options.amiga_status_bar || bb_g_res.amiga_data) {
 		uint16_t palette[16];
 		for (int i = 0; i < 16; ++i) {
 			assert(_colors_180_data[i * 2] == 0x180 + i * 2);
 			palette[i] = _colors_180_data[i * 2 + 1];
 		}
 		g_sys.set_palette_amiga(palette, 32);
-		g_res.spr_count = 120;
+		bb_g_res.spr_count = 120;
 		extern const uint8_t icon6e92[]; // top or bottom status bar
-		g_res.spr_frames[123] = icon6e92;
-		g_res.spr_frames[124] = icon6e92;
+		bb_g_res.spr_frames[123] = icon6e92;
+		bb_g_res.spr_frames[124] = icon6e92;
 		extern const uint8_t icon72de[]; // jake
-		g_res.spr_frames[115] = icon72de;
+		bb_g_res.spr_frames[115] = icon72de;
 		extern const uint8_t icon73a6[]; // elwood
-		g_res.spr_frames[117] = icon73a6;
+		bb_g_res.spr_frames[117] = icon73a6;
 		extern const uint8_t icon6ef6[]; // heart
-		g_res.spr_frames[120] = icon6ef6;
+		bb_g_res.spr_frames[120] = icon6ef6;
 		extern const uint8_t icon740a[]; // instrument level 1
-		g_res.spr_frames[135] = icon740a;
+		bb_g_res.spr_frames[135] = icon740a;
 		extern const uint8_t icon746e[]; // instrument level 2
-		g_res.spr_frames[136] = icon746e;
+		bb_g_res.spr_frames[136] = icon746e;
 		extern const uint8_t icon74d2[]; // instrument level 3
-		g_res.spr_frames[137] = icon74d2;
+		bb_g_res.spr_frames[137] = icon74d2;
 		extern const uint8_t icon7536[]; // instrument level 4
-		g_res.spr_frames[138] = icon7536;
+		bb_g_res.spr_frames[138] = icon7536;
 		extern const uint8_t icon759a[]; // instrument level 5
-		g_res.spr_frames[139] = icon759a;
+		bb_g_res.spr_frames[139] = icon759a;
 		extern const uint8_t icon75fe[]; // instrument level 1 (found)
-		g_res.spr_frames[140] = icon75fe;
+		bb_g_res.spr_frames[140] = icon75fe;
 		extern const uint8_t icon7662[]; // instrument level 2 (found)
-		g_res.spr_frames[141] = icon7662;
+		bb_g_res.spr_frames[141] = icon7662;
 		extern const uint8_t icon76c6[]; // instrument level 3 (found)
-		g_res.spr_frames[142] = icon76c6;
+		bb_g_res.spr_frames[142] = icon76c6;
 		extern const uint8_t icon772a[]; // instrument level 4 (found)
-		g_res.spr_frames[143] = icon772a;
+		bb_g_res.spr_frames[143] = icon772a;
 		extern const uint8_t icon778e[]; // instrument level 5 (found)
-		g_res.spr_frames[144] = icon778e;
+		bb_g_res.spr_frames[144] = icon778e;
 	}
 	if (g_options.cga_colors) {
 		g_sys.set_screen_palette(_colors_cga, 0, 4, 8);
@@ -326,24 +326,24 @@ static void game_run() {
 	}
 	do_title_screen();
 	while (!g_sys.input.quit) {
-		if (!g_vars.level_completed_flag) {
-			g_vars.game_over_flag = 0;
-			g_vars.play_level_flag = 1;
-			if (!g_vars.play_demo_flag) {
-				g_vars.level = g_options.start_level;
+		if (!bb_g_vars.level_completed_flag) {
+			bb_g_vars.game_over_flag = 0;
+			bb_g_vars.play_level_flag = 1;
+			if (!bb_g_vars.play_demo_flag) {
+				bb_g_vars.level = g_options.start_level;
 				do_select_player();
 			} else {
-				g_vars.level = g_vars.start_level;
+				bb_g_vars.level = bb_g_vars.start_level;
 			}
 			screen_unk5();
 		}
-		while (!g_sys.input.quit && g_vars.play_level_flag) {
-			if (!g_vars.game_over_flag) {
+		while (!g_sys.input.quit && bb_g_vars.play_level_flag) {
+			if (!bb_g_vars.game_over_flag) {
 				do_inter_screen();
 			}
-			load_level_data(g_vars.level);
-			do_level();
-			if (g_res.dos_demo && g_vars.level > 0) {
+			load_level_data(bb_g_vars.level);
+			bb_do_level();
+			if (bb_g_res.dos_demo && bb_g_vars.level > 0) {
 				do_demo_screens();
 				return;
 			}
@@ -353,9 +353,9 @@ static void game_run() {
 
 EXPORT_SYMBOL struct game_t game_bb = {
 	"Blues Brothers",
-	res_init,
-	res_fini,
-	sound_init,
-	sound_fini,
+	bb_res_init,
+	bb_res_fini,
+	bb_sound_init,
+	bb_sound_fini,
 	game_run
 };

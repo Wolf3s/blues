@@ -8,7 +8,7 @@ struct unpack_t {
 
 static struct unpack_t g_unpack;
 
-int unpack(FILE *in, uint8_t *dst) {
+int bb_unpack(FILE *in, uint8_t *dst) {
 	uint8_t buf[6];
 	fread(buf, 1, 6, in);
 	const int uncompressed_size = (READ_LE_UINT16(buf) << 16) + READ_LE_UINT16(buf + 2);

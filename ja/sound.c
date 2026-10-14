@@ -27,12 +27,12 @@ static void repeat_sound_cb(const uint8_t **data, uint32_t *size) {
 		*data = 0;
 		*size = 0;
 	} else {
-		*data = g_res.samples + _samples[next].offset;
+		*data = ja_g_res.samples + _samples[next].offset;
 		*size = _samples[next].size;
 	}
 }
 
-void sound_init() {
+void ja_sound_init() {
 	uint16_t offset = 0;
 	for (int i = 0; i < MAX_SOUNDS; ++i) {
 		const int num = i;
@@ -42,10 +42,10 @@ void sound_init() {
 	}
 }
 
-void sound_fini() {
+void ja_sound_fini() {
 }
 
-void play_sound(int num) {
+void ja_play_sound(int num) {
 	assert(num < MAX_SOUNDS);
 	const int sample_offset = _samples[num].offset;
 	const int sample_size = _samples[num].size;
@@ -59,12 +59,12 @@ void play_sound(int num) {
 	} else {
 		_seq = 0;
 	}
-	g_mix.play_sound(g_res.samples + sample_offset, sample_size, 8000, _seq ? repeat_sound_cb : 0);
+	g_mix.play_sound(ja_g_res.samples + sample_offset, sample_size, 8000, _seq ? repeat_sound_cb : 0);
 }
 
-void play_music(int num) {
-	const int size = load_file(_modules[num]);
+void ja_play_music(int num) {
+	const int size = ja_load_file(_modules[num]);
 	if (size != 0) {
-		g_mix.play_music(g_res.tmp, size);
+		g_mix.play_music(ja_g_res.tmp, size);
 	}
 }

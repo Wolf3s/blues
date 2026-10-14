@@ -21,7 +21,7 @@ static void object_func_op1(struct object_t *obj) {
 	obj->direction_lr = obj->moving_direction + 1;
 	obj->xmaxvelocity = 40;
 	if (obj->player_ydist <= 10 && obj->player_xdist > -26 && obj->player_xdist < 26) {
-		if (g_vars.objects[OBJECT_NUM_PLAYER1].special_anim != 18 && g_vars.objects[OBJECT_NUM_PLAYER2].special_anim != 18) {
+		if (bb_g_vars.objects[OBJECT_NUM_PLAYER1].special_anim != 18 && bb_g_vars.objects[OBJECT_NUM_PLAYER2].special_anim != 18) {
 			if (obj->player_ydist > -20) {
 				obj->special_anim = 2;
 				obj->direction_lr = 0;
@@ -70,7 +70,7 @@ static void object_func_op2(struct object_t *obj) {
 }
 
 static void object_func_op3(struct object_t *obj) {
-	if (obj->player_ydist <= 20 && obj->player_ydist > -(TILEMAP_SCREEN_W / 2) && obj->player_xdist < (TILEMAP_SCREEN_W / 2) && g_vars.objects[38].type == 100) {
+	if (obj->player_ydist <= 20 && obj->player_ydist > -(TILEMAP_SCREEN_W / 2) && obj->player_xdist < (TILEMAP_SCREEN_W / 2) && bb_g_vars.objects[38].type == 100) {
 		if (obj->direction_ud > -30) {
 			if (obj->special_anim == 0 || obj->anim_num == 16) {
 				do_level_update_projectile(obj);
@@ -160,8 +160,8 @@ static void object_func_op7(struct object_t *obj) {
 	}
 	obj->direction_lr = obj->moving_direction + 1;
 	obj->xmaxvelocity = 32;
-	if (g_vars.objects[OBJECT_NUM_PLAYER1].special_anim != 18 && g_vars.objects[OBJECT_NUM_PLAYER2].special_anim != 18) {
-		if (obj->player_ydist <= 10 && obj->player_xdist > -(TILEMAP_SCREEN_W / 4) && obj->player_xdist < (TILEMAP_SCREEN_W / 4) && g_vars.objects[38].type == 100) {
+	if (bb_g_vars.objects[OBJECT_NUM_PLAYER1].special_anim != 18 && bb_g_vars.objects[OBJECT_NUM_PLAYER2].special_anim != 18) {
+		if (obj->player_ydist <= 10 && obj->player_xdist > -(TILEMAP_SCREEN_W / 4) && obj->player_xdist < (TILEMAP_SCREEN_W / 4) && bb_g_vars.objects[38].type == 100) {
 			if (obj->direction_ud > -30) {
 				if (obj->special_anim == 0 || obj->anim_num == 16) {
 					obj->anim_num = 1;
@@ -203,7 +203,7 @@ static void object_func_op10(struct object_t *obj) {
 	}
 	obj->direction_lr = obj->moving_direction + 1;
 	obj->xmaxvelocity = 32;
-	if (obj->player_ydist <= 10 && obj->player_xdist > -(TILEMAP_SCREEN_W / 2) && obj->player_xdist < (TILEMAP_SCREEN_W / 2) && g_vars.objects[38].type == 100) {
+	if (obj->player_ydist <= 10 && obj->player_xdist > -(TILEMAP_SCREEN_W / 2) && obj->player_xdist < (TILEMAP_SCREEN_W / 2) && bb_g_vars.objects[38].type == 100) {
 		if (obj->direction_ud > -30) {
 			if (obj->special_anim == 0 || obj->anim_num == 16) {
 				obj->anim_num = 1;
@@ -302,7 +302,7 @@ static void object_func_op14_helper(int x1, int y1, int x2, int y2, int color) {
 
 static void object_func_op14(struct object_t *obj) {
 	obj->special_anim = 2;
-	object_func_op14_helper(obj->screen_xpos, level_ypos_egou[obj->unk5D] - g_vars.screen_tilemap_yorigin, obj->screen_xpos, obj->screen_ypos - 5, 3);
+	object_func_op14_helper(obj->screen_xpos, level_ypos_egou[obj->unk5D] - bb_g_vars.screen_tilemap_yorigin, obj->screen_xpos, obj->screen_ypos - 5, 3);
 	if (obj->elevator_direction == 1) {
 		if (obj->moving_direction < 25) {
 			++obj->moving_direction;

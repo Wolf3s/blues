@@ -8,38 +8,38 @@
 uint16_t triggers_get_tile_type(int x, int y) {
 	const uint8_t *p = lookup_sql(x, y);
 	const int num = p[0];
-	return g_res.triggers[num].tile_type;
+	return bb_g_res.triggers[num].tile_type;
 }
 
 uint16_t triggers_get_next_tile_flags(int x, int y) {
 	const int num = triggers_get_next_tile_num(x, y);
-	return g_res.triggers[num].tile_flags;
+	return bb_g_res.triggers[num].tile_flags;
 }
 
 uint16_t triggers_get_tile_data(struct object_t *obj) {
 	const uint8_t *p = lookup_sql(obj->xpos16, obj->ypos16 + 1);
 	const int num = p[0];
-	return g_res.triggers[num].unk10;
+	return bb_g_res.triggers[num].unk10;
 }
 
 uint16_t triggers_get_next_tile_num(int x, int y) {
 	const uint8_t *p = lookup_sql(x,  y);
 	const int num = p[0];
-	return g_res.triggers[num].unk16;
+	return bb_g_res.triggers[num].unk16;
 }
 
 static void trigger_func_op0(struct object_t *obj) {
 	if (obj->floor_ypos16 < obj->ypos16) {
 		obj->yvelocity = 0;
 		obj->ypos = (obj->ypos & ~15) - 1;
-		obj->screen_ypos = obj->ypos - g_vars.screen_tilemap_yorigin;
+		obj->screen_ypos = obj->ypos - bb_g_vars.screen_tilemap_yorigin;
 		obj->ypos16 = obj->ypos >> 4;
 		obj->sprite_type = 1;
 		obj->yfriction = 0;
 	} else if (obj->yvelocity < 0) {
 		obj->yvelocity = 0;
 		obj->ypos = (obj->ypos & ~15) + 15;
-		obj->screen_ypos = obj->ypos - g_vars.screen_tilemap_yorigin;
+		obj->screen_ypos = obj->ypos - bb_g_vars.screen_tilemap_yorigin;
 		obj->ypos16 = obj->ypos >> 4;
 		obj->yfriction = 0;
 	}
@@ -48,21 +48,21 @@ static void trigger_func_op0(struct object_t *obj) {
 }
 
 static void trigger_func_op1(struct object_t *obj) {
-	if (obj->data5F == g_vars.level + 1) {
+	if (obj->data5F == bb_g_vars.level + 1) {
 		obj->carry_crate_flag = 1;
 		do_level_enter_door(obj);
 	}
 	if (obj->floor_ypos16 < obj->ypos16) {
 		obj->yvelocity = 0;
 		obj->ypos = (obj->ypos & ~15) - 1;
-		obj->screen_ypos = obj->ypos - g_vars.screen_tilemap_yorigin;
+		obj->screen_ypos = obj->ypos - bb_g_vars.screen_tilemap_yorigin;
 		obj->ypos16 = obj->ypos >> 4;
 		obj->sprite_type = 1;
 		obj->yfriction = 0;
 	} else if (obj->yvelocity < 0) {
 		obj->yvelocity = 0;
 		obj->ypos = (obj->ypos & ~15) + 15;
-		obj->screen_ypos = obj->ypos - g_vars.screen_tilemap_yorigin;
+		obj->screen_ypos = obj->ypos - bb_g_vars.screen_tilemap_yorigin;
 		obj->ypos16 = obj->ypos >> 4;
 		obj->yfriction = 0;
 	}
@@ -73,22 +73,22 @@ static void trigger_func_op2(struct object_t *obj) {
 	if (obj->floor_ypos16 < obj->ypos16) {
 		obj->yvelocity = 0;
 		obj->ypos = (obj->ypos & ~15) - 1;
-		obj->screen_ypos = obj->ypos - g_vars.screen_tilemap_yorigin;
+		obj->screen_ypos = obj->ypos - bb_g_vars.screen_tilemap_yorigin;
 		obj->ypos16 = obj->ypos >> 4;
 		obj->sprite_type = 1;
 		obj->yfriction = 0;
-		if (!g_vars.switch_player_scrolling_flag) {
+		if (!bb_g_vars.switch_player_scrolling_flag) {
 			obj->unk1C = 5;
 		}
 	} else if (obj->yvelocity < 0) {
 		obj->yvelocity = 0;
 		obj->ypos = (obj->ypos & ~15) + 15;
-		obj->screen_ypos = obj->ypos - g_vars.screen_tilemap_yorigin;
+		obj->screen_ypos = obj->ypos - bb_g_vars.screen_tilemap_yorigin;
 		obj->ypos16 = obj->ypos >> 4;
 		obj->yfriction = 0;
 	}
 	obj->unk2F = 0;
-	if (g_vars.switch_player_scrolling_flag) {
+	if (bb_g_vars.switch_player_scrolling_flag) {
 		obj->special_anim = 18;
 		obj->anim_num = 1;
 	}
@@ -97,11 +97,11 @@ static void trigger_func_op2(struct object_t *obj) {
 static void trigger_func_op3(struct object_t *obj) {
 	obj->yvelocity = 0;
 	obj->ypos = (obj->ypos & ~15) - 1;
-	obj->screen_ypos = obj->ypos - g_vars.screen_tilemap_yorigin;
+	obj->screen_ypos = obj->ypos - bb_g_vars.screen_tilemap_yorigin;
 	obj->ypos16 = obj->ypos >> 4;
 	obj->sprite_type = 1;
 	obj->yfriction = 0;
-	if (obj->data5F != g_vars.level + 1) {
+	if (obj->data5F != bb_g_vars.level + 1) {
 		if (obj->yfriction == 0) {
 			obj->yfriction = 15;
 		}
@@ -110,9 +110,9 @@ static void trigger_func_op3(struct object_t *obj) {
 		obj->ypos16 = 70;
 		obj->xpos = obj->xpos16 << 4;
 		obj->ypos = obj->ypos16 << 4;
-		obj->screen_xpos = obj->xpos - g_vars.screen_tilemap_xorigin;
-		obj->screen_ypos = obj->ypos - g_vars.screen_tilemap_yorigin;
-		g_vars.switch_player_scrolling_flag = 1;
+		obj->screen_xpos = obj->xpos - bb_g_vars.screen_tilemap_xorigin;
+		obj->screen_ypos = obj->ypos - bb_g_vars.screen_tilemap_yorigin;
+		bb_g_vars.switch_player_scrolling_flag = 1;
 	}
 }
 
@@ -136,7 +136,7 @@ static void trigger_func_op5(struct object_t *obj) {
 	if (obj->floor_ypos16 < obj->ypos16) {
 		obj->yvelocity = 0;
 		obj->ypos = (obj->ypos & ~15) - 1;
-		obj->screen_ypos = obj->ypos - g_vars.screen_tilemap_yorigin;
+		obj->screen_ypos = obj->ypos - bb_g_vars.screen_tilemap_yorigin;
 		obj->ypos16 = obj->ypos >> 4;
 		obj->sprite_type = 1;
 		obj->yfriction = 0;
@@ -180,7 +180,7 @@ static void trigger_func_op8(struct object_t *obj) {
 	if (obj->floor_ypos16 < obj->ypos16) {
 		obj->yvelocity = 0;
 		obj->ypos = (obj->ypos & ~15) - 1;
-		obj->screen_ypos = obj->ypos - g_vars.screen_tilemap_yorigin;
+		obj->screen_ypos = obj->ypos - bb_g_vars.screen_tilemap_yorigin;
 		obj->ypos16 = obj->ypos >> 4;
 		obj->sprite_type = 1;
 		obj->yfriction = 0;
@@ -211,7 +211,7 @@ static void trigger_func_op9(struct object_t *obj) {
 	if (obj->floor_ypos16 < obj->ypos16) {
 		obj->yvelocity = 0;
 		obj->ypos = (obj->ypos & ~15) - 1;
-		obj->screen_ypos = obj->ypos - g_vars.screen_tilemap_yorigin;
+		obj->screen_ypos = obj->ypos - bb_g_vars.screen_tilemap_yorigin;
 		obj->ypos16 = obj->ypos >> 4;
 		obj->sprite_type = 1;
 		obj->yfriction = 0;
@@ -229,7 +229,7 @@ static void trigger_func_op11(struct object_t *obj) {
 	if (obj->floor_ypos16 < obj->ypos16) {
 		obj->yvelocity = 0;
 		obj->ypos = (obj->ypos & ~15) - 1;
-		obj->screen_ypos = obj->ypos - g_vars.screen_tilemap_yorigin;
+		obj->screen_ypos = obj->ypos - bb_g_vars.screen_tilemap_yorigin;
 		obj->ypos16 = obj->ypos >> 4;
 		obj->sprite_type = 1;
 		obj->yfriction = 0;
@@ -269,7 +269,7 @@ static void trigger_func_op14(struct object_t *obj) {
 	if (obj->floor_ypos16 < obj->ypos16 && obj->unk2B == 0) {
 		obj->yvelocity = 0;
 		obj->ypos = (obj->ypos & ~15) - 1;
-		obj->screen_ypos = obj->ypos - g_vars.screen_tilemap_yorigin;
+		obj->screen_ypos = obj->ypos - bb_g_vars.screen_tilemap_yorigin;
 		obj->ypos16 = obj->ypos >> 4;
 		obj->sprite_type = 1;
 	}
@@ -281,7 +281,7 @@ static void trigger_func_op15(struct object_t *obj) {
 		if (obj->floor_ypos16 < obj->ypos16 && obj->unk2B == 0) {
 			obj->yvelocity = 0;
 			obj->ypos = (obj->ypos & ~15) - 1;
-			obj->screen_ypos = obj->ypos - g_vars.screen_tilemap_yorigin;
+			obj->screen_ypos = obj->ypos - bb_g_vars.screen_tilemap_yorigin;
 			obj->ypos16 = obj->ypos >> 4;
 		}
 		obj->sprite_type = 2;
@@ -294,7 +294,7 @@ static void trigger_func_op16(struct object_t *obj) {
 		if (obj->floor_ypos16 < obj->ypos16 && obj->unk2B == 0) {
 			obj->yvelocity = 0;
 			obj->ypos = (obj->ypos & ~15) - 1;
-			obj->screen_ypos = obj->ypos - g_vars.screen_tilemap_yorigin;
+			obj->screen_ypos = obj->ypos - bb_g_vars.screen_tilemap_yorigin;
 			obj->ypos16 = obj->ypos >> 4;
 		}
 		obj->sprite_type = 3;
@@ -308,7 +308,7 @@ static void trigger_func_op17(struct object_t *obj) {
 		obj->yacc = -3;
 	}
 	obj->xpos = (obj->xpos & ~15) + 7;
-	obj->screen_xpos = obj->xpos - g_vars.screen_tilemap_xorigin;
+	obj->screen_xpos = obj->xpos - bb_g_vars.screen_tilemap_xorigin;
 	obj->xpos16 = obj->xpos >> 4;
 }
 
@@ -318,7 +318,7 @@ static void trigger_func_op18(struct object_t *obj) {
 		obj->yacc = -3;
 	}
 	obj->xpos = (obj->xpos & ~15) + 17;
-	obj->screen_xpos = obj->xpos - g_vars.screen_tilemap_xorigin;
+	obj->screen_xpos = obj->xpos - bb_g_vars.screen_tilemap_xorigin;
 	obj->xpos16 = obj->xpos >> 4;
 }
 
@@ -328,7 +328,7 @@ static void trigger_func_op19(struct object_t *obj) {
 		obj->yacc = -3;
 	}
 	obj->xpos = (obj->xpos & ~15) - 1;
-	obj->screen_xpos = obj->xpos - g_vars.screen_tilemap_xorigin;
+	obj->screen_xpos = obj->xpos - bb_g_vars.screen_tilemap_xorigin;
 	obj->xpos16 = obj->xpos >> 4;
 }
 
@@ -336,14 +336,14 @@ static void trigger_func_op20(struct object_t *obj) {
 	if (obj->floor_ypos16 < obj->ypos16) {
 		obj->yvelocity = 0;
 		obj->ypos = (obj->ypos & ~15) - 1;
-		obj->screen_ypos = obj->ypos - g_vars.screen_tilemap_yorigin;
+		obj->screen_ypos = obj->ypos - bb_g_vars.screen_tilemap_yorigin;
 		obj->ypos16 = obj->ypos >> 4;
 		obj->sprite_type = 1;
 		obj->yfriction = 0;
 	} else if (obj->yvelocity < 0) {
 		obj->yvelocity = 0;
 		obj->ypos = (obj->ypos & ~15) + 15;
-		obj->screen_ypos = obj->ypos - g_vars.screen_tilemap_yorigin;
+		obj->screen_ypos = obj->ypos - bb_g_vars.screen_tilemap_yorigin;
 		obj->ypos16 = obj->ypos >> 4;
 		obj->sprite_type = 0;
 	}
@@ -354,13 +354,13 @@ static void trigger_func_op21(struct object_t *obj) {
 	if (obj->floor_ypos16 < obj->ypos16) {
 		obj->yvelocity = 0;
 		obj->ypos = (obj->ypos & ~15) - 1;
-		obj->screen_ypos = obj->ypos - g_vars.screen_tilemap_yorigin;
+		obj->screen_ypos = obj->ypos - bb_g_vars.screen_tilemap_yorigin;
 		obj->ypos16 = obj->ypos >> 4;
 		obj->yfriction = 0;
 	} else if (obj->yvelocity < 0) {
 		obj->yvelocity = 0;
 		obj->ypos = (obj->ypos & ~15) + 15;
-		obj->screen_ypos = obj->ypos - g_vars.screen_tilemap_yorigin;
+		obj->screen_ypos = obj->ypos - bb_g_vars.screen_tilemap_yorigin;
 		obj->ypos16 = obj->ypos >> 4;
 		obj->yfriction = 0;
 	}
@@ -373,7 +373,7 @@ static void trigger_func_op22(struct object_t *obj) {
 	if (obj->floor_ypos16 < obj->ypos16 && obj->unk2B == 0) {
 		obj->yvelocity = 0;
 		obj->ypos = (obj->ypos & ~15) - 1;
-		obj->screen_ypos = obj->ypos - g_vars.screen_tilemap_yorigin;
+		obj->screen_ypos = obj->ypos - bb_g_vars.screen_tilemap_yorigin;
 		obj->ypos16 = obj->ypos >> 4;
 	}
 	obj->unk2F = 0;
@@ -391,10 +391,10 @@ static void trigger_func_op23(struct object_t *obj) {
 static void trigger_func_op24(struct object_t *obj) {
 	obj->yfriction = (obj->yvelocity & 255) + 6;
 	if (obj->floor_ypos16 < obj->ypos16 && obj->unk2B == 0) {
-		play_sound(SOUND_14);
+		bb_play_sound(SOUND_14);
 		obj->yvelocity = 0;
 		obj->ypos = (obj->ypos & ~15) - 1;
-		obj->screen_ypos = obj->ypos - g_vars.screen_tilemap_yorigin;
+		obj->screen_ypos = obj->ypos - bb_g_vars.screen_tilemap_yorigin;
 		obj->ypos16 = obj->ypos >> 4;
 	}
 	obj->unk3D = 0;
@@ -405,14 +405,14 @@ static void trigger_func_op27(struct object_t *obj) {
 	if (obj->floor_ypos16 < obj->ypos16) {
 		obj->yvelocity = 0;
 		obj->ypos = (obj->ypos & ~15) - 1;
-		obj->screen_ypos = obj->ypos - g_vars.screen_tilemap_yorigin;
+		obj->screen_ypos = obj->ypos - bb_g_vars.screen_tilemap_yorigin;
 		obj->ypos16 = obj->ypos >> 4;
 		obj->unk1C = 4;
 		obj->sprite_type = 1;
 	} else if (obj->yvelocity < 0) {
 		obj->yvelocity = 0;
 		obj->ypos = (obj->ypos & ~15) + 15;
-		obj->screen_ypos = obj->ypos - g_vars.screen_tilemap_yorigin;
+		obj->screen_ypos = obj->ypos - bb_g_vars.screen_tilemap_yorigin;
 		obj->ypos16 = obj->ypos >> 4;
 	}
 	obj->unk2F = 0;
@@ -423,14 +423,14 @@ static void trigger_func_op28(struct object_t *obj) {
 	if (obj->floor_ypos16 < obj->ypos16) {
 		obj->yvelocity = 0;
 		obj->ypos = (obj->ypos & ~15) - 1;
-		obj->screen_ypos = obj->ypos - g_vars.screen_tilemap_yorigin;
+		obj->screen_ypos = obj->ypos - bb_g_vars.screen_tilemap_yorigin;
 		obj->ypos16 = obj->ypos >> 4;
 		obj->unk1C = -4;
 		obj->sprite_type = 1;
 	} else if (obj->yvelocity < 0) {
 		obj->yvelocity = 0;
 		obj->ypos = (obj->ypos & ~15) + 15;
-		obj->screen_ypos = obj->ypos - g_vars.screen_tilemap_yorigin;
+		obj->screen_ypos = obj->ypos - bb_g_vars.screen_tilemap_yorigin;
 		obj->ypos16 = obj->ypos >> 4;
 	}
 	obj->unk2F = 0;
@@ -440,14 +440,14 @@ static void trigger_func_op29(struct object_t *obj) {
 	if (obj->floor_ypos16 < obj->ypos16) {
 		obj->yvelocity = 0;
 		obj->ypos = (obj->ypos & ~15) - 1;
-		obj->screen_ypos = obj->ypos - g_vars.screen_tilemap_yorigin;
+		obj->screen_ypos = obj->ypos - bb_g_vars.screen_tilemap_yorigin;
 		obj->ypos16 = obj->ypos >> 4;
 		obj->sprite_type = 1;
 		obj->unk2D = 1;
 	} else if (obj->yvelocity < 0) {
 		obj->yvelocity = 0;
 		obj->ypos = (obj->ypos & ~15) + 15;
-		obj->screen_ypos = obj->ypos - g_vars.screen_tilemap_yorigin;
+		obj->screen_ypos = obj->ypos - bb_g_vars.screen_tilemap_yorigin;
 		obj->ypos16 = obj->ypos >> 4;
 	}
 	obj->unk2F = 0;
@@ -457,7 +457,7 @@ static void trigger_func_op30(struct object_t *obj) {
 	if (obj->floor_ypos16 < obj->ypos16 && obj->unk2B == 0) {
 		obj->yvelocity = 0;
 		obj->ypos = (obj->ypos & ~15) - 1;
-		obj->screen_ypos = obj->ypos - g_vars.screen_tilemap_yorigin;
+		obj->screen_ypos = obj->ypos - bb_g_vars.screen_tilemap_yorigin;
 		obj->ypos16 = obj->ypos >> 4;
 		obj->sprite_type = 1;
 		obj->unk2D = 2;
@@ -470,7 +470,7 @@ static void trigger_func_op31(struct object_t *obj) {
 		obj->yvelocity = 0;
 		obj->ypos = (obj->ypos & ~15) + triggers_tile_get_yoffset(obj);
 		obj->ypos16 = obj->ypos >> 4;
-		obj->screen_ypos = obj->ypos - g_vars.screen_tilemap_yorigin;
+		obj->screen_ypos = obj->ypos - bb_g_vars.screen_tilemap_yorigin;
 		obj->sprite_type = 1;
 		obj->unk1C = 1;
 		obj->xvelocity = 1;
@@ -482,7 +482,7 @@ static void trigger_func_op32(struct object_t *obj) {
 		obj->yvelocity = 0;
 		obj->ypos = (obj->ypos & ~15) + triggers_tile_get_yoffset(obj);
 		obj->ypos16 = obj->ypos >> 4;
-		obj->screen_ypos = obj->ypos - g_vars.screen_tilemap_yorigin;
+		obj->screen_ypos = obj->ypos - bb_g_vars.screen_tilemap_yorigin;
 		obj->sprite_type = 1;
 		obj->unk2F = -3;
 		obj->unk2D = 0;
@@ -494,7 +494,7 @@ static void trigger_func_op33(struct object_t *obj) {
 	if (obj->yvelocity > 0 && obj->unk2B == 0) {
 		obj->yvelocity = 0;
 		obj->ypos = (obj->ypos & ~15) - 2;
-		obj->screen_ypos = obj->ypos - g_vars.screen_tilemap_yorigin;
+		obj->screen_ypos = obj->ypos - bb_g_vars.screen_tilemap_yorigin;
 		obj->ypos16 = obj->ypos >> 4;
 		obj->sprite_type = 1;
 		obj->unk2F = -3;
@@ -508,7 +508,7 @@ static void trigger_func_op34(struct object_t *obj) {
 		obj->yvelocity = 0;
 		obj->ypos = (obj->ypos & ~15) + triggers_tile_get_yoffset(obj);
 		obj->ypos16 = obj->ypos >> 4;
-		obj->screen_ypos = obj->ypos - g_vars.screen_tilemap_yorigin;
+		obj->screen_ypos = obj->ypos - bb_g_vars.screen_tilemap_yorigin;
 		obj->sprite_type = 1;
 		obj->unk2F = 3;
 		obj->unk2D = 0;
@@ -521,7 +521,7 @@ static void trigger_func_op35(struct object_t *obj) {
 		obj->yvelocity = 0;
 		obj->ypos = (obj->ypos & ~15) - 2;
 		obj->ypos16 = obj->ypos >> 4;
-		obj->screen_ypos = obj->ypos - g_vars.screen_tilemap_yorigin;
+		obj->screen_ypos = obj->ypos - bb_g_vars.screen_tilemap_yorigin;
 		obj->sprite_type = 1;
 		obj->unk2F = 3;
 		obj->unk2D = 0;
@@ -534,7 +534,7 @@ static void trigger_func_op36(struct object_t *obj) {
 		obj->yvelocity = 0;
 		obj->ypos = (obj->ypos & ~15) + triggers_tile_get_yoffset(obj);
 		obj->ypos16 = obj->ypos >> 4;
-		obj->screen_ypos = obj->ypos - g_vars.screen_tilemap_yorigin;
+		obj->screen_ypos = obj->ypos - bb_g_vars.screen_tilemap_yorigin;
 		obj->sprite_type = 4;
 		obj->unk2D = 2;
 	}
@@ -545,7 +545,7 @@ static void trigger_func_op37(struct object_t *obj) {
 		obj->yvelocity = 0;
 		obj->ypos = (obj->ypos & ~15) - 2;
 		obj->ypos16 = obj->ypos >> 4;
-		obj->screen_ypos = obj->ypos - g_vars.screen_tilemap_yorigin;
+		obj->screen_ypos = obj->ypos - bb_g_vars.screen_tilemap_yorigin;
 		obj->sprite_type = 4;
 		obj->unk2D = 2;
 	}
@@ -556,7 +556,7 @@ static void trigger_func_op38(struct object_t *obj) {
 		obj->yvelocity = 0;
 		obj->ypos = (obj->ypos & ~15) + triggers_tile_get_yoffset(obj);
 		obj->ypos16 = obj->ypos >> 4;
-		obj->screen_ypos = obj->ypos - g_vars.screen_tilemap_yorigin;
+		obj->screen_ypos = obj->ypos - bb_g_vars.screen_tilemap_yorigin;
 		obj->sprite_type = 4;
 		obj->unk2D = 2;
 	}
@@ -567,7 +567,7 @@ static void trigger_func_op39(struct object_t *obj) {
 		obj->yvelocity = 0;
 		obj->ypos = (obj->ypos & ~15) - 2;
 		obj->ypos16 = obj->ypos >> 4;
-		obj->screen_ypos = obj->ypos - g_vars.screen_tilemap_yorigin;
+		obj->screen_ypos = obj->ypos - bb_g_vars.screen_tilemap_yorigin;
 		obj->sprite_type = 4;
 		obj->unk2D = 2;
 	}
@@ -575,30 +575,30 @@ static void trigger_func_op39(struct object_t *obj) {
 
 static void trigger_func_op40(struct object_t *obj) {
 	static int counter = 0;
-	g_vars.music_num = 0;
+	bb_g_vars.music_num = 0;
 	if (obj->yvelocity > 0 && obj->unk2B == 0) {
 		obj->yvelocity = 0;
 		obj->ypos = (obj->ypos & ~15) - 1;
-		obj->screen_ypos = obj->ypos - g_vars.screen_tilemap_yorigin;
+		obj->screen_ypos = obj->ypos - bb_g_vars.screen_tilemap_yorigin;
 		obj->ypos16 = obj->ypos >> 4;
 		obj->sprite_type = 1;
 		obj->yfriction = 0;
 	} else if (obj->yvelocity < 0) {
 		obj->yvelocity = 0;
 		obj->ypos = (obj->ypos & ~15) + 15;
-		obj->screen_ypos = obj->ypos - g_vars.screen_tilemap_yorigin;
+		obj->screen_ypos = obj->ypos - bb_g_vars.screen_tilemap_yorigin;
 		obj->ypos16 = obj->ypos >> 4;
 	}
 	obj->unk2F = 0;
 	obj->special_anim = 21;
 	if (counter == 0) {
-		play_music(g_vars.music_num);
+		bb_play_music(bb_g_vars.music_num);
 	}
 	if (counter == 400) {
-		if (!g_vars.two_players_flag) {
-			g_vars.level_completed_flag = 1;
-		} else if (g_vars.objects[OBJECT_NUM_PLAYER1].level_complete_flag != 0 && g_vars.objects[OBJECT_NUM_PLAYER2].level_complete_flag != 0) {
-			g_vars.level_completed_flag = 1;
+		if (!bb_g_vars.two_players_flag) {
+			bb_g_vars.level_completed_flag = 1;
+		} else if (bb_g_vars.objects[OBJECT_NUM_PLAYER1].level_complete_flag != 0 && bb_g_vars.objects[OBJECT_NUM_PLAYER2].level_complete_flag != 0) {
+			bb_g_vars.level_completed_flag = 1;
 		}
 	}
 	++counter;
@@ -607,8 +607,8 @@ static void trigger_func_op40(struct object_t *obj) {
 void level_call_trigger_func(struct object_t *obj, int y) {
 	const uint8_t *p = lookup_sql(obj->xpos16, obj->ypos16 + y);
 	int num = p[0];
-	num = g_res.triggers[num].unk16;
-	switch (g_res.triggers[num].op_func) {
+	num = bb_g_res.triggers[num].unk16;
+	switch (bb_g_res.triggers[num].op_func) {
 	case 0:
 		trigger_func_op0(obj);
 		break;
@@ -729,26 +729,26 @@ void level_call_trigger_func(struct object_t *obj, int y) {
 		trigger_func_op40(obj);
 		break;
 	default:
-		print_warning("level_call_trigger_func: op_func %d unimplemented", g_res.triggers[num].op_func);
+		print_warning("level_call_trigger_func: op_func %d unimplemented", bb_g_res.triggers[num].op_func);
 		break;
 	}
 }
 
 void triggers_update_tiles1(struct object_t *obj) {
-	struct object_t *obj35 = &g_vars.objects[35];
-	struct object_t *obj37 = &g_vars.objects[37];
+	struct object_t *obj35 = &bb_g_vars.objects[35];
+	struct object_t *obj37 = &bb_g_vars.objects[37];
 	if (obj->yvelocity >= 0 && obj->special_anim != 18) {
 		obj->special_anim = 0;
 	}
 	int _di = 0;
 	const uint8_t *p = lookup_sql(obj->xpos16, obj->ypos16);
 	int num = p[0];
-	num = g_res.triggers[num].unk16;
-	struct trigger_t *t = &g_res.triggers[num];
+	num = bb_g_res.triggers[num].unk16;
+	struct trigger_t *t = &bb_g_res.triggers[num];
 	if (!t->op_table3 && obj->unk2E != 0) {
 		p = lookup_sql(obj->xpos16, obj->ypos16 - 1);
 		num = p[0];
-		t = &g_res.triggers[num];
+		t = &bb_g_res.triggers[num];
 		_di = 1;
 	}
 	if (!t->op_table3) {
@@ -761,9 +761,9 @@ void triggers_update_tiles1(struct object_t *obj) {
 			obj->unk60 = p[9];
 		}
 		if (p[8] != 0) {
-			if (obj->data5F == g_vars.level + 1) { // music instrument must have been found to complete the level
+			if (obj->data5F == bb_g_vars.level + 1) { // music instrument must have been found to complete the level
 				if (obj->level_complete_flag == 0) {
-					play_sound(SOUND_13);
+					bb_play_sound(SOUND_13);
 					obj->level_complete_flag = 1;
 					if (_di == 0) {
 						do_level_update_tile(obj->xpos16, obj->ypos16, p[2]);
@@ -772,18 +772,18 @@ void triggers_update_tiles1(struct object_t *obj) {
 					}
 					obj->special_anim = p[6];
 					if (obj->special_anim == 22) {
-						play_sound(SOUND_11);
+						bb_play_sound(SOUND_11);
 					}
-					if (obj->type != 0 && g_vars.two_players_flag) {
-						obj37 = &g_vars.objects[36];
+					if (obj->type != 0 && bb_g_vars.two_players_flag) {
+						obj37 = &bb_g_vars.objects[36];
 					}
 					if (obj37->type != 100) {
 						do_level_drop_grabbed_object(obj);
 					}
-					g_vars.triggers_counter = 0;
+					bb_g_vars.triggers_counter = 0;
 				}
-			} else if (g_vars.triggers_counter == 0) {
-				g_vars.triggers_counter = 1;
+			} else if (bb_g_vars.triggers_counter == 0) {
+				bb_g_vars.triggers_counter = 1;
 			}
 		} else {
 			if (_di == 0) {
@@ -792,7 +792,7 @@ void triggers_update_tiles1(struct object_t *obj) {
 				do_level_update_tile(obj->xpos16, obj->ypos16 - 1, p[2]);
 			}
 			if (p[3] != 0) {
-				play_sound(SOUND_6);
+				bb_play_sound(SOUND_6);
 			}
 			obj->vinyls_count += p[3];
 			obj->vinyls_count -= p[4];
@@ -800,35 +800,35 @@ void triggers_update_tiles1(struct object_t *obj) {
 				obj->vinyls_count = 0;
 			}
 			if (p[5] != 0) {
-				play_sound(SOUND_12);
-				if (!g_vars.two_players_flag && obj->data51 < 5) {
+				bb_play_sound(SOUND_12);
+				if (!bb_g_vars.two_players_flag && obj->data51 < 5) {
 					++obj->data51;
 				}
-				if (g_vars.two_players_flag && obj->data51 < 3) {
+				if (bb_g_vars.two_players_flag && obj->data51 < 3) {
 					++obj->data51;
 				}
 				do_level_update_panel_lifes(obj);
 			}
 			obj->special_anim = p[6];
 			if (obj->special_anim == 21) {
-				play_sound(SOUND_8);
+				bb_play_sound(SOUND_8);
 			}
 			if (obj->data5F == 0 && p[7] != 0) { // found music instrument
-				if (!g_vars.two_players_flag) {
+				if (!bb_g_vars.two_players_flag) {
 					obj->data5F = p[7];
 				} else {
-					g_vars.objects[OBJECT_NUM_PLAYER1].data5F = p[7];
-					g_vars.objects[OBJECT_NUM_PLAYER2].data5F = p[7];
+					bb_g_vars.objects[OBJECT_NUM_PLAYER1].data5F = p[7];
+					bb_g_vars.objects[OBJECT_NUM_PLAYER2].data5F = p[7];
 				}
-				screen_draw_frame(g_res.spr_frames[140 + g_vars.level], 12, 16, 80 + g_vars.level * 32, -12);
-				g_vars.found_music_instrument_flag = 1;
-				g_vars.triggers_counter = 0;
-				play_sound(SOUND_12);
+				screen_draw_frame(bb_g_res.spr_frames[140 + bb_g_vars.level], 12, 16, 80 + bb_g_vars.level * 32, -12);
+				bb_g_vars.found_music_instrument_flag = 1;
+				bb_g_vars.triggers_counter = 0;
+				bb_play_sound(SOUND_12);
 			}
 		}
 	} else if (p[1] == 12) {
-		if (obj->type != 0 && g_vars.two_players_flag) {
-			obj35 = &g_vars.objects[34];
+		if (obj->type != 0 && bb_g_vars.two_players_flag) {
+			obj35 = &bb_g_vars.objects[34];
 		}
 		obj35->type = 2;
 		obj35->visible_flag = 1;
@@ -853,27 +853,27 @@ void triggers_update_tiles1(struct object_t *obj) {
 			do_level_update_tile(obj->xpos16, obj->ypos16 - 1, p[2]);
 		}
 		if (p[3] != 0) {
-			play_sound(SOUND_7);
+			bb_play_sound(SOUND_7);
 			obj->vinyls_count += p[3];
 		} else if (p[4] != 0) {
-			play_sound(SOUND_8);
+			bb_play_sound(SOUND_8);
 			obj->vinyls_count -= p[4];
 		}
 		if (obj->vinyls_count < 0) {
 			obj->vinyls_count = 0;
 		}
 		if (p[5] != 0) {
-			play_sound(SOUND_12);
-			if (!g_vars.two_players_flag && obj->data51 < 5) {
+			bb_play_sound(SOUND_12);
+			if (!bb_g_vars.two_players_flag && obj->data51 < 5) {
 				++obj->data51;
 			}
 			do_level_update_panel_lifes(obj);
 		}
 		obj->special_anim = p[6];
 		if (p[10] != 0) {
-			play_sound(SOUND_12);
+			bb_play_sound(SOUND_12);
 			++obj->lifes_count;
-			if (!g_vars.two_players_flag) {
+			if (!bb_g_vars.two_players_flag) {
 				screen_draw_number(obj->lifes_count - 1, 64, 163, 2);
 			} else if (obj->type == PLAYER_JAKE) {
 				screen_draw_number(obj->lifes_count - 1, 48, 163, 2);
@@ -889,7 +889,7 @@ void triggers_update_tiles1(struct object_t *obj) {
 int16_t triggers_tile_get_yoffset(struct object_t *obj) {
 	const uint8_t *p = lookup_sql(obj->xpos16, obj->ypos16);
 	const int num = p[0];
-	return g_res.triggers[num].op_table1[obj->xpos & 15] - 1;
+	return bb_g_res.triggers[num].op_table1[obj->xpos & 15] - 1;
 }
 
 void triggers_update_tiles2(struct object_t *obj) {
@@ -909,7 +909,7 @@ void triggers_update_tiles2(struct object_t *obj) {
 		obj->yvelocity = p[_si + 1];
 		obj->special_anim = p[_si + 2];
 		if (obj->special_anim == 22) {
-			play_sound(SOUND_11);
+			bb_play_sound(SOUND_11);
 		}
 		obj->anim_num = 1;
 		obj->unk2F = 0;

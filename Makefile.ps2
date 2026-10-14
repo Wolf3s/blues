@@ -1,0 +1,47 @@
+.PHONY: all
+
+EE_BIN = blues.elf
+
+BB := decode.c game.c level.c objects.c resource.c screen.c sound.c staticres.c tiles.c unpack.c
+JA := game.c level.c resource.c screen.c sound.c staticres.c unpack.c
+P2 := bosses.c game.c level.c monsters.c resource.c screen.c sound.c staticres.c unpack.c
+
+BB_SRCS := $(foreach f,$(BB),bb/$f)
+JA_SRCS := $(foreach f,$(JA),ja/$f)
+P2_SRCS := $(foreach f,$(P2),p2/$f)
+SRCS := $(BB_SRCS) $(JA_SRCS) $(P2_SRCS)
+EE_OBJS := main.o mixer.o sys_sdl2.o util.o $(SRCS:.c=.o)
+
+EE_INCS = -I$(PS2SDK)/ports/include/SDL2 -I$(PS2SDK)/ports/include
+EE_LDFLAGS = -L$(PS2SDK)/ports/lib -L$(PS2SDK)/ee/lib/ -L$(PS2DEV)/gsKit/lib -s
+EE_LIBS = -lSDL2main -lSDL2_mixer -lmodplug -lxmp -lSDL2 -laudsrv -latomic -lgskit -ldma -ldmakit -ldebug -lps2_drivers -lpatches -lconfig -ldraw -lstdc++ -lm -lc
+EE_CFLAGS = -DPS2 -fno-strict-aliasing -O3 -G0 -Wall -W -g -std=gnu99
+
+all: $(EE_BIN)
+
+game_bb.o: $(BB_SRCS:.c=.o)
+	$(EE_LD) -r -o $@ $^
+	$(EE_OBJCOPY) --localize-hidden $@
+
+game_ja.o: $(JA_SRCS:.c=.o)
+	$(EE_LD) -r -o $@ $^
+	$(EE_OBJCOPY) --localize-hidden $@
+
+game_p2.o: $(P2_SRCS:.c=.o)
+	$(EE_LD) -r -o $@ $^
+	$(EE_OBJCOPY) --localize-hidden $@
+
+$(EE_BIN): game_bb.o game_ja.o game_p2.o
+	$(EE_CC) $(EE_LDFLAGS) -o $@ $^ $(EE_LIBS)
+
+clean: 
+	rm -fr $(EE_BIN) $(EE_OBJS)
+	
+run:
+	cd bin; ps2client -h $(PS2LINK_IP) execee host$(EE_BIN)
+
+reset:
+	ps2client reset
+
+include $(PS2SDK)/samples/Makefile.pref
+include $(PS2SDK)/samples/Makefile.eeglobal

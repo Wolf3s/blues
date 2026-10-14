@@ -170,7 +170,7 @@ struct vars_t {
 	int update_objects_counter;
 };
 
-extern struct vars_t g_vars;
+extern struct vars_t bb_g_vars;
 
 /* staticres.c */
 extern const uint8_t animframe_00dd[];
@@ -202,7 +202,7 @@ extern const uint16_t level_obj_type[MAX_OBJECTS];
 extern uint8_t *level_tilesdata_1e8c[];
 
 /* game.c */
-extern void	update_input();
+extern void	bb_update_input();
 
 /* level.c */
 extern void	load_level_data(int num);
@@ -212,7 +212,7 @@ extern void	do_level_enter_door(struct object_t *);
 extern void	do_level_player_hit(struct object_t *);
 extern void	do_level_drop_grabbed_object(struct object_t *);
 extern void	do_level_update_projectile(struct object_t *obj);
-extern void	do_level();
+extern void	bb_do_level();
 
 /* objects.c */
 extern void	level_call_object_func(struct object_t *);
@@ -238,10 +238,10 @@ extern void	screen_add_game_sprite4(int x, int y, int frame, int blinking_counte
 extern void	screen_load_graphics(const uint8_t *dither_lut_sqv, const uint8_t *dither_lut_avt);
 
 /* sound.c */
-extern void	sound_init();
-extern void	sound_fini();
-extern void	play_sound(int num);
-extern void	play_music(int num);
+extern void	bb_sound_init();
+extern void	bb_sound_fini();
+extern void	bb_play_sound(int num);
+extern void	bb_play_music(int num);
 
 /* tiles.c */
 extern uint16_t	triggers_get_tile_type(int x, int y);

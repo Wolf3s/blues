@@ -138,7 +138,7 @@ static int unpack_eat(struct unpack_eat_t *u, uint8_t *output_buffer, int output
 	return output_size;
 }
 
-int unpack(const char *filename, uint8_t *dst, int size) {
+int ja_unpack(const char *filename, uint8_t *dst, int size) {
 	int uncompressed_size = 0;
 	FILE *fp = fopen(filename, "rb");
 	if (fp) {

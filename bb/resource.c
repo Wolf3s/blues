@@ -4,10 +4,10 @@
 #include "unpack.h"
 #include "util.h"
 
-struct resource_data_t g_res;
+struct resource_data_t bb_g_res;
 
 static bool file_exists(const char *filename) {
-	FILE *fp = fopen_nocase(g_res.datapath, filename);
+	FILE *fp = fopen_nocase(bb_g_res.datapath, filename);
 	if (fp) {
 		fclose(fp);
 		return true;
@@ -15,75 +15,75 @@ static bool file_exists(const char *filename) {
 	return false;
 }
 
-void res_init(const char *datapath, int vga_size) {
-	g_res.datapath = datapath;
+void bb_res_init(const char *datapath, int vga_size) {
+	bb_g_res.datapath = datapath;
 
 	static const int SQL_SIZE = 640 * 25;
-	g_res.sql = (uint8_t *)malloc(SQL_SIZE);
-	if (!g_res.sql) {
+	bb_g_res.sql = (uint8_t *)malloc(SQL_SIZE);
+	if (!bb_g_res.sql) {
 		print_error("Failed to allocate sql buffer, %d bytes", SQL_SIZE);
 	}
 	static const int SPR_SQV_SIZE = 64000;
-	g_res.spr_sqv = (uint8_t *)malloc(SPR_SQV_SIZE);
-	if (!g_res.spr_sqv) {
+	bb_g_res.spr_sqv = (uint8_t *)malloc(SPR_SQV_SIZE);
+	if (!bb_g_res.spr_sqv) {
 		print_error("Failed to allocate sprite buffer, %d bytes", SPR_SQV_SIZE);
 	}
 	static const int AVT_SQV_SIZE = 437 * 16;
-	g_res.avt_sqv = (uint8_t *)malloc(AVT_SQV_SIZE);
-	if (!g_res.avt_sqv) {
+	bb_g_res.avt_sqv = (uint8_t *)malloc(AVT_SQV_SIZE);
+	if (!bb_g_res.avt_sqv) {
 		print_error("Failed to allocate avt buffer, %d bytes", AVT_SQV_SIZE);
 	}
 	const int tmp_size = 32000 + vga_size;
-	g_res.tmp = (uint8_t *)malloc(tmp_size);
-	if (!g_res.tmp) {
+	bb_g_res.tmp = (uint8_t *)malloc(tmp_size);
+	if (!bb_g_res.tmp) {
 		print_error("Failed to allocate tmp buffer, %d bytes", tmp_size);
 	}
-	g_res.vga = (uint8_t *)malloc(vga_size);
-	if (!g_res.vga) {
+	bb_g_res.vga = (uint8_t *)malloc(vga_size);
+	if (!bb_g_res.vga) {
 		print_error("Failed to allocate vga buffer, %d bytes", vga_size);
 	}
-	g_res.vga_size = vga_size;
+	bb_g_res.vga_size = vga_size;
 	static const int TILES_SIZE = 640 * 200;
-	g_res.tiles = (uint8_t *)malloc(TILES_SIZE);
-	if (!g_res.tiles) {
+	bb_g_res.tiles = (uint8_t *)malloc(TILES_SIZE);
+	if (!bb_g_res.tiles) {
 		print_error("Failed to allocate tiles buffer, %d bytes", TILES_SIZE);
 	}
 	static const char *filename = "sound";
 	if (file_exists(filename)) {
-		g_res.snd = (uint8_t *)malloc(SOUND_SIZE);
-		if (!g_res.snd) {
+		bb_g_res.snd = (uint8_t *)malloc(SOUND_SIZE);
+		if (!bb_g_res.snd) {
 			print_warning("Failed to allocate sound buffer, %d bytes", SOUND_SIZE);
 		} else {
-			read_file(filename, g_res.snd, SOUND_SIZE);
+			read_file(filename, bb_g_res.snd, SOUND_SIZE);
 		}
 	}
 	if (file_exists("demomag.sql")) {
-		g_res.dos_demo = true;
+		bb_g_res.dos_demo = true;
 	}
 	if (file_exists("mag.tbl")) {
-		g_res.amiga_data = true;
+		bb_g_res.amiga_data = true;
 	}
 }
 
-void res_fini() {
-	free(g_res.sql);
-	g_res.sql = 0;
-	free(g_res.spr_sqv);
-	g_res.spr_sqv = 0;
-	free(g_res.avt_sqv);
-	g_res.avt_sqv = 0;
-	free(g_res.tmp);
-	g_res.tmp = 0;
-	free(g_res.vga);
-	g_res.vga = 0;
-	free(g_res.tiles);
-	g_res.tiles = 0;
-	free(g_res.snd);
-	g_res.snd = 0;
+void bb_res_fini() {
+	free(bb_g_res.sql);
+	bb_g_res.sql = 0;
+	free(bb_g_res.spr_sqv);
+	bb_g_res.spr_sqv = 0;
+	free(bb_g_res.avt_sqv);
+	bb_g_res.avt_sqv = 0;
+	free(bb_g_res.tmp);
+	bb_g_res.tmp = 0;
+	free(bb_g_res.vga);
+	bb_g_res.vga = 0;
+	free(bb_g_res.tiles);
+	bb_g_res.tiles = 0;
+	free(bb_g_res.snd);
+	bb_g_res.snd = 0;
 }
 
 int read_file(const char *filename, uint8_t *dst, int size) {
-	FILE *fp = fopen_nocase(g_res.datapath, filename);
+	FILE *fp = fopen_nocase(bb_g_res.datapath, filename);
 	if (!fp) {
 		print_error("Unable to open '%s'", filename);
 		return 0;
@@ -101,12 +101,12 @@ int read_file(const char *filename, uint8_t *dst, int size) {
 }
 
 int read_compressed_file(const char *filename, uint8_t *dst) {
-	FILE *fp = fopen_nocase(g_res.datapath, filename);
+	FILE *fp = fopen_nocase(bb_g_res.datapath, filename);
 	if (!fp) {
 		print_error("Unable to open '%s'", filename);
 		return 0;
 	}
-	const int size = unpack(fp, dst);
+	const int size = bb_unpack(fp, dst);
 	fclose(fp);
 	return size;
 }
@@ -179,7 +179,7 @@ static void load_iff(const uint8_t *data, uint32_t size, uint8_t *dst, int dst_p
 			} else if (memcmp(buf, "CMAP", 4) == 0) {
 				buf += 8;
 				for (int i = 0; i < len; ++i) {
-					g_res.palette[i] = buf[i];
+					bb_g_res.palette[i] = buf[i];
 				}
 			} else if (memcmp(buf, "BODY", 4) == 0) {
 				buf += 8;
@@ -226,12 +226,12 @@ void load_avt(const char *filename, uint8_t *dst, int offset, int dither_pattern
 	const int count = READ_LE_UINT16(ptr); ptr += 6;
 	print_debug(DBG_RESOURCE, "avt count %d", count);
 	for (int i = 0; i < count; ++i) {
-		g_res.avt[offset + i] = ptr;
+		bb_g_res.avt[offset + i] = ptr;
 		ptr += 132;
 	}
-	g_res.avt_count = count;
+	bb_g_res.avt_count = count;
 	if (!(dither_pattern < 0)) {
-		dither_cga(dither_pattern, g_res.cga_lut_avt);
+		dither_cga(dither_pattern, bb_g_res.cga_lut_avt);
 	}
 }
 
@@ -270,7 +270,7 @@ void load_bin(const char *filename) {
 	read_file(filename, bin, MAX_TRIGGERS * 10);
 	const uint8_t *p = bin;
 	for (int i = 0; i < MAX_TRIGGERS; ++i) {
-		struct trigger_t *t = &g_res.triggers[i];
+		struct trigger_t *t = &bb_g_res.triggers[i];
 		t->tile_type = p[0];
 		t->tile_flags = p[1];
 		t->op_func = p[2];
@@ -286,11 +286,11 @@ void load_bin(const char *filename) {
 }
 
 void load_blk(const char *filename) {
-	read_file(filename, g_res.tiles, 256 * 16 * 8);
+	read_file(filename, bb_g_res.tiles, 256 * 16 * 8);
 }
 
 void load_ck(const char *filename, uint16_t offset, int dither_pattern) {
-	const int size = read_compressed_file(filename, g_res.tmp);
+	const int size = read_compressed_file(filename, bb_g_res.tmp);
 	switch (offset) {
 	case 0x6000: // page3
 		offset = 0;
@@ -302,28 +302,28 @@ void load_ck(const char *filename, uint16_t offset, int dither_pattern) {
 		print_error("Unexpected offset 0x%x in load_ck()", offset);
 		break;
 	}
-	load_iff(g_res.tmp, size, g_res.tiles + offset, 640, dither_pattern);
+	load_iff(bb_g_res.tmp, size, bb_g_res.tiles + offset, 640, dither_pattern);
 }
 
 void load_img(const char *filename, int screen_w, int dither_pattern) {
 	int size;
 	const char *ext = strrchr(filename, '.');
 	if (ext && strcmp(ext + 1, "lbm") == 0) {
-		size = read_file(filename, g_res.tmp, 0);
+		size = read_file(filename, bb_g_res.tmp, 0);
 	} else {
-		size = read_compressed_file(filename, g_res.tmp);
+		size = read_compressed_file(filename, bb_g_res.tmp);
 	}
 	assert(size <= 32000);
-	load_iff(g_res.tmp, size, g_res.vga, 320, dither_pattern);
+	load_iff(bb_g_res.tmp, size, bb_g_res.vga, 320, dither_pattern);
 	if (dither_pattern < 0) {
-		g_sys.set_screen_palette(g_res.palette, 0, 16, 8);
+		g_sys.set_screen_palette(bb_g_res.palette, 0, 16, 8);
 	}
-	g_sys.copy_bitmap(g_res.vga, 320, 200);
+	g_sys.copy_bitmap(bb_g_res.vga, 320, 200);
 }
 
 void load_m(const char *filename) {
-	const int filesize = read_file(filename, g_res.tmp, 0);
-	const int count = READ_BE_UINT16(g_res.tmp);
+	const int filesize = read_file(filename, bb_g_res.tmp, 0);
+	const int count = READ_BE_UINT16(bb_g_res.tmp);
 	assert(filesize == 2 + count * 32);
 }
 
@@ -332,7 +332,7 @@ static int load_spr_helper(int offset, const uint8_t *ptr, uint16_t (*read16)(co
 	print_debug(DBG_RESOURCE, "spr count %d", count);
 	assert(offset + count <= MAX_SPR_FRAMES);
 	for (int i = 0; i < count; ++i) {
-		g_res.spr_frames[offset + i] = ptr;
+		bb_g_res.spr_frames[offset + i] = ptr;
 		const int h = read16(ptr - 4);
 		const int w = read16(ptr - 2);
 		assert((w & 3) == 0);
@@ -348,7 +348,7 @@ void load_spr(const char *filename, uint8_t *dst, int offset) {
 	// player sprites use 8 colors
 	const int depth = (offset == 0) ? 3 : 4;
 	const int count = load_spr_helper(offset, dst, READ_BE_UINT16, depth);
-	g_res.spr_count = offset + count;
+	bb_g_res.spr_count = offset + count;
 	// convert to little endian
 	uint8_t *ptr = dst;
 	for (int i = 0; i < count; ++i) {
@@ -367,16 +367,16 @@ void load_spr(const char *filename, uint8_t *dst, int offset) {
 void load_sqv(const char *filename, uint8_t *dst, int offset, int dither_pattern) {
 	read_compressed_file(filename, dst);
 	const int count = load_spr_helper(offset, dst, READ_LE_UINT16, 4);
-	g_res.spr_count = offset + count;
+	bb_g_res.spr_count = offset + count;
 	if (!(dither_pattern < 0)) {
-		dither_cga(dither_pattern, g_res.cga_lut_sqv);
+		dither_cga(dither_pattern, bb_g_res.cga_lut_sqv);
 	}
 }
 
 void load_sql(const char *filename) {
-	read_compressed_file(filename, g_res.sql);
+	read_compressed_file(filename, bb_g_res.sql);
 }
 
 uint8_t *lookup_sql(int x, int y) {
-	return g_res.sql + y * 128 + x;
+	return bb_g_res.sql + y * 128 + x;
 }

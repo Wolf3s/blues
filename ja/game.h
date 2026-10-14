@@ -160,7 +160,7 @@ struct vars_t {
 	bool reset_palette_flag;
 };
 
-extern struct vars_t g_vars;
+extern struct vars_t ja_g_vars;
 
 /* staticres.c */
 extern const uint16_t sound_offsets[];
@@ -198,7 +198,7 @@ extern const uint8_t player_anim_lut[];
 extern const uint8_t *player_anim_table[];
 
 /* game.c */
-extern void	update_input();
+extern void	ja_update_input();
 extern void	do_game_over_screen();
 extern void	do_game_win_screen();
 extern void	do_difficulty_screen();
@@ -206,24 +206,24 @@ extern void	do_level_password_screen();
 extern void	do_level_number_screen();
 
 /* level.c */
-extern void	do_level();
+extern void	ja_do_level();
 
 /* screen.c */
 extern void	video_draw_dot_pattern(int offset);
 extern void	video_draw_sprite(int num, int x, int y, int flag);
-extern void	video_draw_string(const char *s, int offset, int hspace);
+extern void	ja_video_draw_string(const char *s, int offset, int hspace);
 extern void	video_copy_vga(int size);
 extern void	video_copy_backbuffer(int h);
 extern void	ja_decode_spr(const uint8_t *src, int w, int h, uint8_t *dst, int dst_pitch, uint8_t pal_mask);
 extern void	ja_decode_chr(const uint8_t *buffer, const int size, uint8_t *dst, int dst_pitch);
 extern void	ja_decode_tile(const uint8_t *buffer, uint8_t pal_mask, uint8_t *dst, int dst_pitch, int x, int y);
 extern void	ja_decode_motif(int num, uint8_t color);
-extern void	video_load_sprites();
+extern void	ja_video_load_sprites();
 
 /* sound.c */
-extern void	sound_init();
-extern void	sound_fini();
-extern void	play_sound(int num);
-extern void	play_music(int num);
+extern void	ja_sound_init();
+extern void	ja_sound_fini();
+extern void	ja_play_sound(int num);
+extern void	ja_play_music(int num);
 
 #endif /* GAME_H__ */
